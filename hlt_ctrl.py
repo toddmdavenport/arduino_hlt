@@ -3,7 +3,7 @@
 import serial, time, datetime, argparse
 
 """Script to control an electric hot liquor tank throught an arduino
-and collect temperature data from sensors"""
+and collect temperature data from sensor"""
 
 def data_logger(data):
     """Takes sensor and state info from the serial line, formats, date stamps and writes it to a file."""
@@ -12,11 +12,8 @@ def data_logger(data):
         return 
     else:
         data = data.strip()
-        now = str(datetime.datetime.now())
-        myfile = open("data/" + now[:10],'a')
-        #myfile.write(now[11:22] + ',')
-        myfile.write(",".join([now[11:22],data[11:16],data[27:]] )+ '\n')
-        #myfile.write(data[11:16] + ',' + data[27:] + ',' + '\n' )
+        myfile = open("data/" + time.strftime("%Y-%m-%d"),'a')
+        myfile.write(",".join(time.strftime("%H:%M:%S"),data[10:16],data[27:]] )+ '\n')
         myfile.close()
 
 parser = argparse.ArgumentParser()
