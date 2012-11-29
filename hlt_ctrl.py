@@ -12,8 +12,10 @@ def data_logger(data):
         return 
     else:
         data = data.strip()
+        probe_temp = data[data.find(":") : data.find("s")]
+        set_temp = data[data.rfind(":"):]
         myfile = open("data/" + time.strftime("%Y-%m-%d"),'a')
-        myfile.write(",".join(time.strftime("%H:%M:%S"),data[10:16],data[27:]] )+ '\n')
+        myfile.write(",".join(time.strftime("%H:%M:%S"),probe_temp,set_temp)+ '\n')
         myfile.close()
 
 parser = argparse.ArgumentParser()
