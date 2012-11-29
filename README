@@ -1,0 +1,3 @@
+Automated HLT for heating mash water when all grain brewing.
+
+Written in python and the arduino microcontroller platform language (C++ derivative).
