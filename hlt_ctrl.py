@@ -35,7 +35,7 @@ if args.settemp:
         ser.write("t"+str(args.settemp)) # writes a set temp to the controller 
     else:
         print( "%i is not between 1 and 200" % args.settemp) 
-    time.sleep(1)
+    time.sleep(2)
 
 # turns the controller to an ON state.
 # If it is not "ON" the controller cannont
@@ -43,12 +43,12 @@ if args.settemp:
 # temp can be set
 if args.on: 
     ser.write("n")
-    time.sleep(1)
+    time.sleep(2)
 
 #set the system to an "OFF" standby state.
 if args.off:
     ser.write("f")
-    time.sleep(1)
+    time.sleep(2)
 
 # request operation data and collect response
 if args.data:
