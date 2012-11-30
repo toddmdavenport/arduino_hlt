@@ -8,13 +8,13 @@ and collect temperature data from sensor"""
 def data_logger(data):
     """Takes sensor and state info from the serial line, formats, date stamps and writes it to a file."""
     if data[0:3] == "OFF":
-        print("system is off. no data recorded") 
+        #print("system is off. no data recorded") 
         return 
     else:
         data = data.strip()
         probe_temp = data[data.find(":")+1 : data.find("s")]
         set_temp = data[data.rfind(":") + 1:]
-        myfile = open("data/" + time.strftime("%Y-%m-%d"),'a')
+        myfile = open("/home/tdavenport/arduino_hlt/data/" + time.strftime("%Y-%m-%d"),'a')
         myfile.write(",".join([time.strftime("%H:%M:%S") ,set_temp, probe_temp]) )
         myfile.close()
 
@@ -58,6 +58,6 @@ if args.data:
    # print(sys_data)
 
 ser.close()
-print "connection closed"
+#print "connection closed"
 
 
