@@ -8,7 +8,7 @@ and collect temperature data from sensor"""
 def data_logger(data):
     """Takes sensor and state info from the serial line, formats, date stamps and writes it to a file."""
     if data[0:3] == "OFF":
-        #print("system is off. no data recorded") 
+        print("system is off. no data recorded") 
         return 
     else:
         data = data.strip()
@@ -27,7 +27,7 @@ parser.add_argument("-d", "--data", help= "requestes available data from the con
 args = parser.parse_args()
 
 ser = serial.Serial('/dev/ttyACM0',9600,timeout=3)
-print "connected to " + ser.portstr
+#print "connected to " + ser.portstr
 time.sleep(1)
 
 if args.settemp: 
