@@ -10,10 +10,8 @@ def csv_parser(date):
             time.append(row[0]) 
             set_t.append(row[1])
             probe.append(row[2])
-    print time 
-    print set_t
-    print probe
+    return time, set_t, probe 
 
-csv_parser('2012-11-30')
+print csv_parser('2012-11-30')
 
 
