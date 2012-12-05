@@ -3,7 +3,7 @@
 import serial, time, datetime, argparse
 
 """Script to control an electric hot liquor tank throught an arduino
-and collect temperature data from sensors"""
+and collect temperature data from sensor"""
 
 def data_logger(data):
     """Takes sensor and state info from the serial line, formats, date stamps and writes it to a file."""
@@ -12,11 +12,10 @@ def data_logger(data):
         return 
     else:
         data = data.strip()
-        now = str(datetime.datetime.now())
-        myfile = open("data/" + now[:10],'a')
-        #myfile.write(now[11:22] + ',')
-        myfile.write(",".join([now[11:22],data[11:16],data[27:]] )+ '\n')
-        #myfile.write(data[11:16] + ',' + data[27:] + ',' + '\n' )
+        probe_temp = data[data.find(":")+1 : data.find("s")]
+        set_temp = data[data.rfind(":") + 1:]
+        myfile = open("/home/tdavenport/arduino_hlt/data/" + time.strftime("%Y-%m-%d"),'a')
+        myfile.write(",".join([time.strftime("%H:%M:%S") ,set_temp, probe_temp]) )
         myfile.close()
 
 parser = argparse.ArgumentParser()
@@ -28,7 +27,7 @@ parser.add_argument("-d", "--data", help= "requestes available data from the con
 args = parser.parse_args()
 
 ser = serial.Serial('/dev/ttyACM0',9600,timeout=3)
-print "connected to " + ser.portstr
+#print "connected to " + ser.portstr
 time.sleep(1)
 
 if args.settemp: 
@@ -36,7 +35,7 @@ if args.settemp:
         ser.write("t"+str(args.settemp)) # writes a set temp to the controller 
     else:
         print( "%i is not between 1 and 200" % args.settemp) 
-    time.sleep(1)
+    time.sleep(2)
 
 # turns the controller to an ON state.
 # If it is not "ON" the controller cannont
@@ -44,12 +43,12 @@ if args.settemp:
 # temp can be set
 if args.on: 
     ser.write("n")
-    time.sleep(1)
+    time.sleep(2)
 
 #set the system to an "OFF" standby state.
 if args.off:
     ser.write("f")
-    time.sleep(1)
+    time.sleep(2)
 
 # request operation data and collect response
 if args.data:
@@ -59,6 +58,6 @@ if args.data:
    # print(sys_data)
 
 ser.close()
-print "connection closed"
+#print "connection closed"
 
 
