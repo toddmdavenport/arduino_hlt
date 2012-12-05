@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import csv, matplotlib
+import csv
+import matplotlib.pyplot as plt
 
 def csv_parser(date):
     with open('data/' + date, 'rb') as csvfile:
@@ -12,6 +13,12 @@ def csv_parser(date):
             probe.append(row[2])
     return time, set_t, probe 
 
-print csv_parser('2012-11-30')
+time, set_t, probe =  csv_parser('2012-11-30')
+plt.plot(probe)
+plt.ylabel('Degrees F')
+plt.show()
+
+
+#sample data set
 
 
