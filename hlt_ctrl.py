@@ -53,7 +53,7 @@ if args.off:
 # request operation data and collect response
 if args.data:
     ser.write("d")
-    sys_data = ser.read(size=35)
+    sys_data = ser.read(size=35) #newlines are in win format. Causing problems.
     data_logger(sys_data)
    # print(sys_data)
 

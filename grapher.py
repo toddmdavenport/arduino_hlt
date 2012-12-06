@@ -1,20 +1,25 @@
 #!/usr/bin/python
 
-import csv
+import csv,time, datetime
 import matplotlib.pyplot as plt
-
-def csv_parser(date):
-    with open('data/' + date, 'rb') as csvfile:
+import matplotlib.dates
+# takes a csvfile logged by the control application and returns each
+#column as a list to be passed to matplotlib
+def csv_parser(filename):
+    with open('data/' + filename, 'rb') as csvfile:
         data = csv.reader(csvfile, delimiter=",")
-        time, set_t, probe = [], [], []
+        timestamp, set_t, probe = [], [], []
         for row in data:
-            time.append(row[0]) 
+            timestamp.append(row[0]) 
             set_t.append(row[1])
             probe.append(row[2])
-    return time, set_t, probe 
+        for item in timestamp:
+            time.strptime(item,"%H:%M:%S") #converts strings to datetime objects
+    return timestamp, set_t, probe 
 
-time, set_t, probe =  csv_parser('2012-11-30')
-plt.plot(probe)
+timestamp, set_t, probe = csv_parser('2012-11-30')
+timestamp = matplotlib.dates.date2num(timestamp)
+plt.plot(timestamp,probe)
 plt.ylabel('Degrees F')
 plt.show()
 
