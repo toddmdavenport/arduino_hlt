@@ -4,7 +4,7 @@ import csv
 import matplotlib.pyplot as plt
 import matplotlib.dates
 from datetime import datetime
-from datetime import timedelta 
+
 # takes a csvfile logged by the control application and returns each
 #column as a list to be passed to matplotlib
 def csv_parser(filename):
@@ -19,11 +19,14 @@ def csv_parser(filename):
 
 
 timestamp, set_t, probe = csv_parser('2012-11-30')
+for item in timestamp:
+    datetime.strptime(item,"%H:%M:%S")
 
+print timestamp    
 plt.plot(probe)
 plt.plot(set_t)
 plt.ylabel('Degrees F')
-plt.xlabel('Time')
+plt.xlabel('Time: Minutes')
 plt.show()
 
 
