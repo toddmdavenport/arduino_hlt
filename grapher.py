@@ -22,21 +22,17 @@ timestamp, set_t, probe = csv_parser('2012-11-30')
 for item in timestamp:
     datetime.strptime(item,"%H:%M:%S")
 
-print timestamp    
-plt.plot(probe)
-plt.plot(set_t)
+plt.plot(set_t, color="orange", label="Target Temp", linewidth=2.0)
+plt.plot(probe, color="blue", label="Sensor Temp", linewidth=1.5)
 plt.ylabel('Degrees F')
 plt.xlabel('Time: Minutes')
+plt.legend(loc='lower right')
 plt.show()
 
 
 #sample data set
 #
 #
-#11:16:11,182,77.34
-#11:20:16,10,82.96
-#11:23:31,10,81.61
-#11:29:41,10,81.27
 #11:52:43,10,80.26
 #11:53:05,10,80.26
 #11:54:05,10,80.15
