@@ -8,7 +8,6 @@ and collect temperature data from sensor"""
 def data_logger(data):
     """Takes sensor and state info from the serial line, formats, date stamps and writes it to a file."""
     if data[0:3] == "OFF":
-        print("system is off. no data recorded") 
         return 
     else:
         data = data.strip()
