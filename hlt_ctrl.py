@@ -23,6 +23,7 @@ parser.add_argument("-t", "--settemp", help="sets the target temp in deg F. Rang
 parser.add_argument("-n", "--on", help= "turns the controller to an 'ON' state", action="store_true")
 parser.add_argument("-f", "--off", help= "turns the controller to an 'OFF' state", action="store_true")
 parser.add_argument("-d", "--data", help= "requestes available data from the controller", action="store_true")
+parser.add_argument("-w","--web", help= "get data formated for web interface.",action="store_true")
 args = parser.parse_args()
 
 ser = serial.Serial('/dev/ttyACM0',9600,timeout=3)
@@ -55,6 +56,12 @@ if args.data:
     sys_data = ser.read(size=35) #newlines are in win format. Causing problems.
     data_logger(sys_data)
    # print(sys_data)
+
+#request and retrun data for flask web frontend
+if args.web:
+    ser.write("d")
+    sys_data = ser.read(size=35)
+    print(sys_data)
 
 ser.close()
 #print "connection closed"
