@@ -17,6 +17,16 @@ def data_logger(data):
         myfile.write(",".join([time.strftime("%H:%M:%S") ,set_temp, probe_temp]) )
         myfile.close()
 
+#def data_parser(data):
+#    '''returns 3 variables for web front end'''
+#    system_state = True
+#    if data[0:3] == "OFF":
+#        system_state = False 
+#    data = data.strip()
+#    sensor_temp = data[data.find(":")+1 : data.find("\r\nset")]
+#    set_temp = data[data.rfind(":") + 1:]
+#    return sensor_temp, set_temp, system_state
+
 parser = argparse.ArgumentParser()
 parser = argparse.ArgumentParser(description="Script to control an electric hot liquor tank throught an arduino and collect sensor and state data")
 parser.add_argument("-t", "--settemp", help="sets the target temp in deg F. Range is 1 to 200", type=int)
