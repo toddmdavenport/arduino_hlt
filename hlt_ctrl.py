@@ -20,7 +20,7 @@ def main():
         ser = serial.Serial('/dev/ttyACM0',9600,timeout=3)
         time.sleep(1)
     except:
-        print "Could not connect to the serila device."
+        print "Could not connect to the serial device."
         raise SystemExit
     
     if args.settemp: 
