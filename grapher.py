@@ -18,7 +18,7 @@ def csv_parser(filename):
     return timestamp, set_t, probe 
 
 
-timestamp, set_t, probe = csv_parser('2012-11-30')
+timestamp, set_t, probe = csv_parser('2013-03-03')
 for item in timestamp:
     datetime.strptime(item,"%H:%M:%S")
 

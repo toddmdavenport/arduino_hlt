@@ -4,27 +4,29 @@
 #include <LiquidCrystal.h>
 
 // initialize the LCD library with the numbers of the interface pins
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
-int ButtonVoltage = 0;
-int ButtonPressed = 0;
+LiquidCrystal lcd(12, 11 ,10 ,9 ,8, 7 );
 int Backlight = 10;
 int fadeValue = 255;
+//vars for buttons
+int ButtonVoltage = 0;
+int ButtonPressed = 0;
+int timer = 0;
+int longpress = 0; 
 
-#define BUTTON_SELECT    5
-#define BUTTON_LEFT      4
-#define BUTTON_DOWN      3
-#define BUTTON_UP        2
-#define BUTTON_RIGHT     1
-#define BUTTON_NONE      0
-
-int DS18S20_Pin = 2; //DS18S20 Signal pin on digital 2
+int DS18S20_Pin = 3; //DS18S20 Signal pin on digital 2
 int target_temp= 0; // Target temp for the system
-int heater_relay = 3 ; //digital pin for the relay controlling the heat
+int heater_relay = 5 ; //digital pin for the relay controlling the heat
 int newTemp = 0;
 int system_state = 0; //controls on/off state of the system
 
 //Temperature chip i/o
 OneWire ds(DS18S20_Pin);  // on digital pin 2
+
+#define BUTTON_UP        4
+#define BUTTON_DOWN      3
+#define BUTTON_RESET     2
+#define BUTTON_ONOFF     1
+#define BUTTON_NONE      0
 
 void setup(void) {
   Serial.begin(9600);
@@ -38,9 +40,11 @@ void setup(void) {
   lcd.print("SetT:");
   lcd.setCursor(13,1);
   lcd.print("OFF");  
-  //seup relay
+   //seup relay
   digitalWrite(heater_relay, 0); //makes sure the relay is off before init
-  pinMode(heater_relay, OUTPUT);  
+  pinMode(heater_relay, OUTPUT);
+  // setup buttons
+  pinMode(A1, INPUT_PULLUP);
 }
 
 void loop(void) {
@@ -67,46 +71,41 @@ void loop(void) {
   lcd.print("     ");// spaces to over write any previous values. 
   //delay(500); //just here to slow down the output so it is easier to read
 
- // getting input from the lcd buttons
- ButtonVoltage = analogRead(0);
- //Serial.println(ButtonVoltage);
+
+ // getting input from the  buttons
+ ButtonVoltage = analogRead(1);
+ Serial.println(ButtonVoltage);
  
 // Observed values:
-//     NONE:    1023
-//     SELECT:  722
-//     LEFT:    481 
-//     DOWN:    308
-//     UP:      132
-//     RIGHT:   0
-
-  if (ButtonVoltage > 800) ButtonPressed = BUTTON_NONE;    // No button pressed should be 1023
-  else if (ButtonVoltage > 500) ButtonPressed = BUTTON_SELECT;   
-  else if (ButtonVoltage > 400) ButtonPressed = BUTTON_LEFT;   
-  else if (ButtonVoltage > 250) ButtonPressed = BUTTON_DOWN;   
-  else if (ButtonVoltage > 100) ButtonPressed = BUTTON_UP; 
-  else ButtonPressed = BUTTON_RIGHT;
+//     NONE:    
+//     ONOFF:    
+//     RESET:    
+//     DOWN:    
+//     UP:      
+ 
+  if (ButtonVoltage > 200) ButtonPressed = BUTTON_NONE;    // No button pressed should be 1023
+  else if (ButtonVoltage > 140) ButtonPressed = BUTTON_ONOFF;   
+  else if (ButtonVoltage > 100) ButtonPressed = BUTTON_RESET;   
+  else if (ButtonVoltage > 40) ButtonPressed = BUTTON_DOWN;   
+  else ButtonPressed = BUTTON_UP;
   
   switch (ButtonPressed) {
-  case BUTTON_SELECT:
+  case BUTTON_ONOFF:
               if (system_state == 1) { 
                 system_state = 0;}
               else if (system_state == 0){
                 system_state = 1;}
               delay(500); //to make reduce multiple presses of button
               break;
-  case BUTTON_LEFT:
-              target_temp = target_temp + 10;
-              delay(500);
-              break;
   case BUTTON_DOWN:
               target_temp = target_temp - 1;    
               delay(500);
               break;
   case BUTTON_UP:
-              target_temp = target_temp + 1;
+              target_temp = target_temp + 1;    
               delay(500);
-              break; 
-  case BUTTON_RIGHT:
+              break;
+  case BUTTON_RESET:
               target_temp = 0;
               delay(500);
               break;
@@ -114,8 +113,7 @@ void loop(void) {
               //do nothing
               break;
   }
-  
- 
+
 //turn the heater_relay on or off
   if (system_state == 1) { 
      if (temp_f < target_temp && temperature > 0) { 
@@ -127,6 +125,7 @@ void loop(void) {
   }
   else {digitalWrite(heater_relay, LOW);
 }
+
 //serial communicatin for remote opperation
   if (Serial.available() > 0 ) {
     char inByte = Serial.read();
@@ -195,8 +194,6 @@ int numberFromSerial(void)
   numberString[index]=0;
   return atoi(numberString);
 }
-
-
 
 
 

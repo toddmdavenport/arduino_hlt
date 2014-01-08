@@ -20,9 +20,10 @@ def main():
         ser = serial.Serial('/dev/ttyACM0',9600,timeout=3)
         time.sleep(1)
     except:
-        print "Could not connect to the serila device."
+        print "Could not connect to the serial device."
         raise SystemExit
-    
+   
+    # set the temperature of the hlt
     if args.settemp: 
         if args.settemp >= 1 and args.settemp <= 200:   
             ser.write("t"+str(args.settemp)) # writes a set temp to the controller 
@@ -51,11 +52,12 @@ def main():
         ser.write("d")
         sys_data = ser.read(size=35)
         print(sys_data)
+    
     #closing serial connection
     ser.close()
 
 def data_logger(data):
-    """Takes sensor and state info from the serial line, formats, date stamps and writes it to a file."""
+    """Takes sensor and state info from the serial connection, formats, date stamps and writes it to a file."""
     if data[0:3] == "OFF":
         return 
     else:
