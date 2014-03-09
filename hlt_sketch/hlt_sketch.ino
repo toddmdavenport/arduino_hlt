@@ -4,7 +4,7 @@
 #include <LiquidCrystal.h>
 
 // initialize the LCD library with the numbers of the interface pins
-LiquidCrystal lcd(12, 11 ,10 ,9 ,8, 7 );
+LiquidCrystal lcd(13, 12, 11 ,10 ,9 ,8 );
 int Backlight = 10;
 int fadeValue = 255;
 //vars for buttons
@@ -13,8 +13,8 @@ int ButtonPressed = 0;
 int timer = 0;
 int longpress = 0; 
 
-int DS18S20_Pin = 3; //DS18S20 Signal pin on digital 2
-int target_temp= 0; // Target temp for the system
+int DS18S20_Pin = 2; //DS18S20 Signal pin on digital 2
+int target_temp = 0; // Target temp for the system
 int heater_relay = 5 ; //digital pin for the relay controlling the heat
 int newTemp = 0;
 int system_state = 0; //controls on/off state of the system
@@ -51,7 +51,7 @@ void loop(void) {
 //getting the temp from the DS18S20
   float temperature = getTemp();
   float temp_f = ((temperature * 1.8) + 32);
-  //Serial.println(temp_f); //prints farenheight
+  Serial.println(temp_f); //prints farenheight
   //Serial.println(temperature); //prints celcius
   
  //printing the values to the lcd screen
@@ -74,7 +74,7 @@ void loop(void) {
 
  // getting input from the  buttons
  ButtonVoltage = analogRead(1);
- Serial.println(ButtonVoltage);
+ //Serial.println(ButtonVoltage);
  
 // Observed values:
 //     NONE:    
@@ -88,7 +88,8 @@ void loop(void) {
   else if (ButtonVoltage > 100) ButtonPressed = BUTTON_RESET;   
   else if (ButtonVoltage > 40) ButtonPressed = BUTTON_DOWN;   
   else ButtonPressed = BUTTON_UP;
-  
+
+      
   switch (ButtonPressed) {
   case BUTTON_ONOFF:
               if (system_state == 1) { 
@@ -98,13 +99,39 @@ void loop(void) {
               delay(500); //to make reduce multiple presses of button
               break;
   case BUTTON_DOWN:
-              target_temp = target_temp - 1;    
-              delay(500);
-              break;
+   timer += 1;
+              if (timer > 2){
+                target_temp = target_temp - 10;
+                delay(500);
+                break;
+              }
+                if (timer == 1){
+                target_temp = target_temp - 1;    
+                delay(500); 
+                break;
+              }
+                if (timer == 2){
+                target_temp = target_temp - 9;    
+                delay(500); 
+                break;
+              }
   case BUTTON_UP:
-              target_temp = target_temp + 1;    
-              delay(500);
-              break;
+              timer += 1;
+              if (timer > 2){
+                target_temp = target_temp + 10;
+                delay(500);
+                break;
+              }
+                if (timer == 1){
+                target_temp = target_temp + 1;    
+                delay(500); 
+                break;
+              }
+                if (timer == 2){
+                target_temp = target_temp + 9;    
+                delay(500); 
+                break;
+              }
   case BUTTON_RESET:
               target_temp = 0;
               delay(500);
@@ -113,7 +140,10 @@ void loop(void) {
               //do nothing
               break;
   }
-
+  
+if (ButtonVoltage = analogRead(1) > 200){
+  timer = 0;
+  }
 //turn the heater_relay on or off
   if (system_state == 1) { 
      if (temp_f < target_temp && temperature > 0) { 
